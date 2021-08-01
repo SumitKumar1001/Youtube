@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: sans-serif;
+        }
+        #input {
+            height: 35px;
+            margin-left: 20%;
+            width: 515px;
+            margin-top: 3%;
+        }
+        #result {
+            display: grid;
+            grid-template-columns: repeat(4, 20%);
+            grid-gap: 4%;
+            width: 80%;
+        }
+        .navbar {
+            display: flex;
+        }
+        .list {
+            width: 20%;
+            line-height: 4;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+        }
+        .img_1 {
+            width: 30%;
+        }
+        button {
+            margin-top: 3%;
+            border: none;
+            margin-left: 15px;
+        }
+        .search {
+            display: flex;
+            width: 95%;
+            padding-bottom: 2%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="img1">
+            <img style="height: 70px;
+            width: 250px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_YouTube_%282013-2015%29.svg/2560px-Logo_of_YouTube_%282013-2015%29.svg.png"
+            alt="">
+        </div>
+        <div class="search">
+            <input type="text" name="" id="input" placeholder="Search">
+            <button onclick="searchResult()"><img style="height: 30px;width: 50px;"
+                    src="https://img.flaticon.com/icons/png/512/61/61088.png?size=1200x630f&pad=10,10,10,10&ext=png&bg=FFFFFFFF"
+                    alt=""></button>
+        </div>
+        <div>
+            <img style="height: 55px;
+                margin-left: 1%; margin-top: 15px;"
+                src="https://w7.pngwing.com/pngs/720/423/png-transparent-grey-bell-illustration-youtube-computer-icons-bell-symbol-youtube-hat-silhouette-sound.png"
+                alt="" />
+        </div>
+    </div>
+    <div class="navbar">
+        <div class="list">
+            <div>Home</div>
+            <div>Explore</div>
+            <div>Subscriptions</div>
+            <hr>
+            <div>Library</div>
+            <div>History</div>
+            <div>Your videos</div>
+            <div>Watch later</div>
+            <div>Liked videos</div>
+        </div>
+        <div id="result"></div>
+    </div>
+</body>
+</html>
+<script>
+    let result = document.getElementById('result');
+    async function home() {
+        let res1 = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=most popular videos in India&key=AIzaSyCbpIXm6hK3S9WkowuL3oB5QeHvHhV4abU&maxResults=20`);
+        let data1 = await res1.json();
+        let { items } = data1
+        items = items.filter((el) => {
+        return el.id.videoId != undefined;
+        })
+        items.forEach(({ id: { videoId } }) => {
+        let div1 = document.createElement('div')
+        div1.innerHTML = `<iframe width="250" height="200" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+        result.appendChild(div1);
+        });
+    }
+    home();
+    async function searchResult() {
+        q = document.getElementById('input').value
+        let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${q}&key=AIzaSyCbpIXm6hK3S9WkowuL3oB5QeHvHhV4abU&maxResults=20`);
+        let data = await res.json();
+        result.innerHTML = null;
+        let { items } = data
+        items = items.filter((el) => {
+            return el.id.videoId != undefined;
+        })
+        items.forEach(({ id: { videoId } }) => {
+        let div = document.createElement('div')
+        div.innerHTML = `<iframe width="250" height="200" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+        result.appendChild(div);
+        });
+    }
+</script>
